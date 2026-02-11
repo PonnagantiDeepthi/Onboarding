@@ -6,22 +6,39 @@ import java.security.cert.X509Certificate;
 
 public final class SSLUtil{
 
-    private static final TrustManager[] UNQUESTIONING_TRUST_MANAGER = new TrustManager[]{
-            new X509TrustManager() {
-                public java.security.cert.X509Certificate[] getAcceptedIssuers(){
-                    return null;
-                }
-                public void checkClientTrusted( X509Certificate[] certs, String authType ){}
-                public void checkServerTrusted( X509Certificate[] certs, String authType ){}
-            }
-        };
+    // private static final TrustManager[] UNQUESTIONING_TRUST_MANAGER = new TrustManager[]{
+    //         new X509TrustManager() {
+    //             public java.security.cert.X509Certificate[] getAcceptedIssuers(){
+    //                 return null;
+    //             }
+    //             public void checkClientTrusted( X509Certificate[] certs, String authType ){}
+    //             public void checkServerTrusted( X509Certificate[] certs, String authType ){}
+    //         }
+    //     };
 
-    public  static void turnOffSslChecking() throws NoSuchAlgorithmException, KeyManagementException {
-        // Install the all-trusting trust manager
-        final SSLContext sc = SSLContext.getInstance("SSL");
-        sc.init( null, UNQUESTIONING_TRUST_MANAGER, null );
+    // public  static void turnOffSslChecking() throws NoSuchAlgorithmException, KeyManagementException {
+    //     // Install the all-trusting trust manager
+    //     final SSLContext sc = SSLContext.getInstance("SSL");
+    //     sc.init( null, UNQUESTIONING_TRUST_MANAGER, null );
+    //     HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+    // }
+    
+public class SSLUtil {
+
+    private static final TrustManager[] UNQUESTIONING_TRUST_MANAGER = new TrustManager[]{
+        new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+        }
+    };
+
+    public static void turnOffSslChecking() throws Exception {
+        SSLContext sc = SSLContext.getInstance("TLSv1.3"); // FIXED
+        sc.init(null, UNQUESTIONING_TRUST_MANAGER, new SecureRandom());
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
     }
+}
 
     public static void turnOnSslChecking() throws KeyManagementException, NoSuchAlgorithmException {
         // Return it to the initial state (discovered by reflection, now hardcoded)
