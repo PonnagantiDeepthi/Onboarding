@@ -240,25 +240,61 @@ public class AppUtil {
 		return salt.getBytes();
 	}
 	
-	public static String encrypt(String plainText) {
-		String secretKey = "DiGiTaLtRuStTeChNoLoGy";
-		try {
-			byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-			IvParameterSpec ivspec = new IvParameterSpec(iv);
-//			PBKDF2WithHmacSHA256
-			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-			KeySpec spec = new PBEKeySpec(secretKey.toCharArray(), getSalt(plainText), 65536, 256);
-			SecretKey tmp = factory.generateSecret(spec);
-			SecretKeySpec secretKeySpec = new SecretKeySpec(tmp.getEncoded(), "AES");
+// 	public static String encrypt(String plainText) {
+// 		String secretKey = "DiGiTaLtRuStTeChNoLoGy";
+// 		try {
+// 			byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+// 			IvParameterSpec ivspec = new IvParameterSpec(iv);
+// //			PBKDF2WithHmacSHA256
+// 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+// 			KeySpec spec = new PBEKeySpec(secretKey.toCharArray(), getSalt(plainText), 65536, 256);
+// 			SecretKey tmp = factory.generateSecret(spec);
+// 			SecretKeySpec secretKeySpec = new SecretKeySpec(tmp.getEncoded(), "AES");
 	
-			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivspec);
-			return Base64.getEncoder().encodeToString(cipher.doFinal(plainText.getBytes("UTF-8")));
-		} catch (Exception e) {
-			System.out.println("Error while encrypting: " + e.toString());
-		}
-		return null;
-	}
+// 			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+// 			cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivspec);
+// 			return Base64.getEncoder().encodeToString(cipher.doFinal(plainText.getBytes("UTF-8")));
+// 		} catch (Exception e) {
+// 			System.out.println("Error while encrypting: " + e.toString());
+// 		}
+// 		return null;
+// 	}
+	public static String encrypt(String plainText) {
+    try {
+        String secretKey = "DiGiTaLtRuStTeChNoLoGy";
+
+        // 1. Generate a secure random 12-byte IV
+        byte[] iv = new byte[12];
+        SecureRandom random = new SecureRandom();
+        random.nextBytes(iv);
+
+        GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
+
+        // 2. Derive key using PBKDF2 (upgrade from SHA1 → SHA256)
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+        KeySpec spec = new PBEKeySpec(secretKey.toCharArray(), getSalt(plainText), 65536, 256);
+        SecretKey tmp = factory.generateSecret(spec);
+        SecretKeySpec secretKeySpec = new SecretKeySpec(tmp.getEncoded(), "AES");
+
+        // 3. Use AES/GCM
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, gcmSpec);
+
+        byte[] encrypted = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
+
+        // 4. Combine IV + ciphertext
+        ByteBuffer byteBuffer = ByteBuffer.allocate(iv.length + encrypted.length);
+        byteBuffer.put(iv);
+        byteBuffer.put(encrypted);
+
+        return Base64.getEncoder().encodeToString(byteBuffer.array());
+
+    } catch (Exception e) {
+        System.out.println("Error while encrypting: " + e);
+        return null;
+    }
+}
+
 	
 	public static String getDate(){
     	//SimpleDateFormat smpdate = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
