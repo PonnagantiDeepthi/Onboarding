@@ -40,12 +40,14 @@ public class SSLUtil {
     }
 }
 
-    public static void turnOnSslChecking() throws KeyManagementException, NoSuchAlgorithmException {
-        // Return it to the initial state (discovered by reflection, now hardcoded)
-        SSLContext.getInstance("SSL").init( null, null, null );
+   // ↓ Restore secure default JVM SSL context
+    public static void turnOnSslChecking() throws Exception {
+        SSLContext sc = SSLContext.getInstance("TLSv1.3"); // FIXED (no more "SSL")
+        sc.init(null, null, null);
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
     }
 
-    private SSLUtil(){
-        throw new UnsupportedOperationException( "Do not instantiate libraries.");
+    private SSLUtil() {
+        throw new UnsupportedOperationException("Do not instantiate libraries.");
     }
 }
