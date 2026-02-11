@@ -42,13 +42,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'com.auth0:java-jwt:3.9.0'
 	//providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-	implementation 'commons-fileupload:commons-fileupload:1.5'
+	implementation 'commons-fileupload:commons-fileupload:1.6.0'
 
 	//implementation group: 'org.junit.platform', name: 'junit-platform-gradle-plugin', version: '1.2.0'
 	//implementation 'org.springframework.boot:spring-boot-starter-amqp'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-
-	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.2'
 	implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
 	implementation 'io.sentry:sentry-spring-boot-starter-jakarta:7.16.0'
 
