@@ -35,7 +35,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-undertow'
 
 	implementation 'commons-io:commons-io:2.14.0'
-	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.0'
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.4'
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	// https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter
 	implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.3'
