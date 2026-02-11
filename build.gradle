@@ -57,19 +57,17 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.0'
 	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.0'
 
-	constraints {
-		// Updated Spring Framework security patches
+			// Updated Spring Framework security patches
 		implementation 'org.springframework:spring-core:6.2.11'
 		implementation 'org.springframework:spring-webmvc:6.2.11'
 		implementation 'org.springframework:spring-web:6.2.11'
 		implementation 'org.springframework:spring-beans:6.2.11'
 		implementation 'org.springframework:spring-expression:6.2.11'
 		implementation 'org.springframework:spring-context:6.2.11'
-	}
+	
 }
 
 
-}
 ext {
 	springCloudVersion = "2023.0.3"
 }
