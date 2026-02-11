@@ -55,7 +55,7 @@ dependencies {
 	implementation 'io.github.classgraph:classgraph:4.8.150'
 	implementation 'org.webjars:webjars-locator-core:0.50'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'io.minio:minio:7.1.4'
+	implementation 'io.minio:minio:8.4.4'
 
 //
 	implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
