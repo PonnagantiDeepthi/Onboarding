@@ -2523,7 +2523,7 @@ public class SubscriberServiceImpl implements SubscriberServiceIface {
 				}
 			}
 
-			String emailOTP = generateOtp(5);
+			String emailOTP = generateOtp(6);
 			System.out.println("emailOTP >> " + emailOTP + " : " + AppUtil.encrypt(emailOTP));
 			EmailReqDto dto = new EmailReqDto();
 			dto.setEmailOtp(emailOTP);
