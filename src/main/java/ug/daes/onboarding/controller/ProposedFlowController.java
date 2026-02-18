@@ -83,10 +83,7 @@ public class ProposedFlowController {
 		return proposedFlowIface.submitObData(idDocumentNumber);
 	}
 
-//    @PostMapping(value = "api/update/device/{idDocumentNumber}")
-//    public ApiResponse updateDevice(@PathVariable String idDocumentNumber,@RequestParam(value = "deviceInfo") String deviceInfo){
-//        return praposedFlowIface.updateDevice(idDocumentNumber,deviceInfo);
-//    }
+
 
 	@PostMapping(value = "api/update/temporaryTable")
 	public ApiResponse updateRecordByDeviceIdOrMobileOrEmail(
