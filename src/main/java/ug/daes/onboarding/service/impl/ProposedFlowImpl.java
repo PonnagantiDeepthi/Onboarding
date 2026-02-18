@@ -279,9 +279,12 @@ public class ProposedFlowImpl implements ProposedFlowIface {
 				return exceptionHandlerUtil.createErrorResponse("api.error.doctype.cant.be.null.or.empty");
 			} else if (subscriberObData.getNationality() == null || subscriberObData.getNationality().isEmpty()) {
 				return exceptionHandlerUtil.createErrorResponse("api.error.nationality.cant.be.null.or.empty");
-			} else if (subscriberObData.getIssuingState() == null || subscriberObData.getIssuingState().isEmpty()) {
-				return exceptionHandlerUtil.createErrorResponse("api.error.issuing.state.cant.be.null.or.empty");
-			} else if (subscriberObData.getSubscriberType() == null || subscriberObData.getSubscriberType().isEmpty()) {
+			}
+//			else if (subscriberObData.getIssuingState() == null || subscriberObData.getIssuingState().isEmpty())
+////			{
+////				return exceptionHandlerUtil.createErrorResponse("api.error.issuing.state.cant.be.null.or.empty");
+////			}
+			else if (subscriberObData.getSubscriberType() == null || subscriberObData.getSubscriberType().isEmpty()) {
 				return exceptionHandlerUtil.createErrorResponse("api.error.subscriber.type.cant.be.null.or.empty");
 			} else if (subscriberObData.getDateOfBirth() == null || subscriberObData.getDateOfBirth().isEmpty()) {
 				return exceptionHandlerUtil.createErrorResponse("api.error.date.of.birth.cant.be.null.or.empty");
@@ -553,6 +556,72 @@ public class ProposedFlowImpl implements ProposedFlowIface {
 //					temporaryTable1.setNiraResponse(new String(r.getResponse()));
 //				}
 //			}
+
+
+			if (isOnboardingFee) {
+
+				if (temporaryTableDTO.getNiraResponse() != null &&
+						!temporaryTableDTO.getNiraResponse().toString().trim().isEmpty()) {
+
+					ObjectMapper ob = new ObjectMapper();
+					String s = ob.writeValueAsString(temporaryTableDTO.getNiraResponse());
+					Result r = DAESService.createSecureWireData(s);
+					temporaryTable1.setNiraResponse(new String(r.getResponse()));
+				}
+
+			} else {
+
+
+				if (temporaryTableDTO.getNiraResponse() == null ||
+						temporaryTableDTO.getNiraResponse().toString().trim().isEmpty()) {
+
+					return exceptionHandlerUtil.createFailedResponseWithCustomMessage(
+							"NIRA response missing in request", null
+					);
+				}
+
+
+//				String json = objectMapper.writeValueAsString(temporaryTableDTO.getNiraResponse());
+
+                String json=temporaryTableDTO.getNiraResponse();
+				JsonNode root = objectMapper.readTree(json);
+
+
+				JsonNode dataNode = root.path("customerDetails").path("Result").path("Data");
+
+				String passportNumber = dataNode.path("ActivePassport").path("DocumentNo").asText(null);
+				String emiratesIdNumber = dataNode.path("ResidenceInfo").path("EmiratesIdNumber").asText(null);
+				String emiratesIdDocumentNumber = dataNode.path("ResidenceInfo").path("DocumentNo").asText(null);
+
+				List<String> reasons = subscriberRepoIface.findDuplicateReason(
+						passportNumber,
+						emiratesIdNumber,
+						emiratesIdDocumentNumber
+				);
+
+				if (!reasons.isEmpty()) {
+					switch (reasons.get(0)) {
+						case "PASSPORT":
+							return exceptionHandlerUtil.createFailedResponseWithCustomMessage(
+									"Passport number already used", null);
+						case "NATIONAL_ID":
+							return exceptionHandlerUtil.createFailedResponseWithCustomMessage(
+									"Emirates ID number already used", null);
+						case "NATIONAL_ID_CARD":
+							return exceptionHandlerUtil.createFailedResponseWithCustomMessage(
+									"Emirates ID card number already used", null);
+					}
+				}
+				ObjectMapper mapper = new ObjectMapper();
+				JsonNode jsonNode = mapper.readTree(json);
+				String normalizedJson = mapper.writeValueAsString(jsonNode);
+
+
+				temporaryTable1.setNiraResponse(normalizedJson);
+
+
+			}
+
 
 			temporaryTableRepo.save(temporaryTable1);
 			return exceptionHandlerUtil.createSuccessResponse(
