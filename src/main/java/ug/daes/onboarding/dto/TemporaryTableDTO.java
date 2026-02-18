@@ -12,7 +12,7 @@ public class TemporaryTableDTO {
     private String  deviceId;
 
     private String optionalData1;
-    private Object niraResponse;
+    private String niraResponse;
 //    private String step1Details;
     private SubscriberObDetails subscriberObDataDTO;
     private SubscriberDeviceInfoDto  subscriberDeviceInfoDto;
@@ -125,11 +125,11 @@ public class TemporaryTableDTO {
         this.updatedOn = updatedOn;
     }
 
-    public Object getNiraResponse() {
+    public String getNiraResponse() {
 		return niraResponse;
 	}
 
-	public void setNiraResponse(Object niraResponse) {
+	public void setNiraResponse(String niraResponse) {
 		this.niraResponse = niraResponse;
 	}
 
