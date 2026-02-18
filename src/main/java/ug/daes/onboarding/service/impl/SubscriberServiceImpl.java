@@ -2804,11 +2804,12 @@ public class SubscriberServiceImpl implements SubscriberServiceIface {
 		uaeSmsBody.put("mobileno", mobileNumber);
 		uaeSmsBody.put("smstext", text);
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		System.out.println("getToken() :: " + getToken());
-		headers.set("access_token", getToken());
-		HttpEntity<Object> requestEntity = new HttpEntity<>(uaeSmsBody, headers);
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.APPLICATION_JSON);
+//		System.out.println("getToken() :: " + getToken());
+//		headers.set("access_token", getToken());
+//
+		HttpEntity<Object> requestEntity = new HttpEntity<>(uaeSmsBody);
 		try {
 			logger.info(CLASS + "sendSMSUAE req for restTemplate url {} and requestEntity {} ", url, requestEntity);
 			ResponseEntity<Object> res = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Object.class);
@@ -2928,10 +2929,10 @@ public class SubscriberServiceImpl implements SubscriberServiceIface {
 				return exceptionHandlerUtil.createFailedResponseWithCustomMessage(subscriberOBDataValidation, null);
 			}
 
-			if (obRequestDTO.getSubscriberData().getIssuingState() == null
-					|| obRequestDTO.getSubscriberData().getIssuingState().isEmpty()) {
-				return exceptionHandlerUtil.createErrorResponse("api.error.issuing.state.cant.be.null.or.empty");
-			}
+//			if (obRequestDTO.getSubscriberData().getIssuingState() == null
+//					|| obRequestDTO.getSubscriberData().getIssuingState().isEmpty()) {
+//				return exceptionHandlerUtil.createErrorResponse("api.error.issuing.state.cant.be.null.or.empty");
+//			}
 
 			SubscriberOnboardingData subscriberOnboardingData = onboardingDataRepoIface
 					.findLatestSubscriber(subscriber.getSubscriberUid()).stream().findFirst().orElse(null);
